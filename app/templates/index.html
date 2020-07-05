@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load humanize_extras %}
+
+{% block page_title %}
+  {% trans "Casita: comprar e alugar imóveis em Portugal!" %}
+{% endblock %}
+
+{% block content %}
+  <main role="main" class="max-w-4xl mx-auto">
+    <h1 class="text-center text-4xl font-handwritten">
+      {% trans 'Eu quero uma <span class="font-bold">casita</span>!' %}
+    </h1>
+    {% comment %}
+    <section class="flex justify-between">
+      <img src="{% static 'logo_custo_justo.png' %}" />
+      <img src="{% static 'logo_imovirtual.png' %}" />
+      <img src="{% static 'logo_olx.svg' %}" />
+    </section>
+    {% endcomment %}
+    <section>
+      <div>
+      </div>
+      <form>
+        <button>Pesquisar</button>
+      </form>
+    </section>
+    <ol class="space-y-6 infinite-container">
+      {% for ad in page_obj %}
+        <li class="flex items-center infinite-item">
+          <img
+            class="w-1/4"
+            src="{{ ad.cover_photo.url }}"
+          />
+          <section class="w-1/4">
+            <div>
+              <span class="uppercase">
+                {{ ad.get_tipologia_display }}
+              </span>
+              para
+              <span class="uppercase">
+                {% if ad.for_sale %}
+                  venda
+                {% else %}
+                  arrendar
+                {% endif %}
+              </span>
+            </div>
+            <div class="text-xl font-bold">
+              {{ ad.price|intspace }} €
+              {% if not ad.for_sale %}
+                {% trans "por mês" %}
+              {% endif %}
+            </div>
+            <div>
+              {{ ad.location }}
+            </div>
+            <div>
+              {{ ad.posted_at }}
+            </div>
+          </section>
+          <section class="w-1/4 text-center">
+            {% if ad.bedrooms %}
+              <div>
+                {% blocktrans count counter=ad.bedrooms %}
+                  {{ counter }} quarto
+                {% plural %}
+                  {{ counter }} quartos
+                {% endblocktrans %}
+              </div>
+            {% endif %}
+            {% if ad.bathrooms %}
+              <div>
+                {% blocktrans count counter=ad.bathrooms %}
+                  {{ counter }} casa de banho
+                {% plural %}
+                  {{ counter }} casas de banho
+                {% endblocktrans %}
+              </div>
+            {% endif %}
+          </section>
+          <a
+            class="w-1/4 text-center"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="{{ ad.url }}"
+          >
+            {% blocktrans with source=ad.get_source_display %}
+              Contacto no {{ source }}
+            {% endblocktrans %}
+          </a>
+        </li>
+      {% endfor %}
+    </ol>
+    {% if page_obj.has_next %}
+      <a
+        class="infinite-more-link"
+        href="?page={{ page_obj.next_page_number }}"
+      />
+    {% endif %}
+  </main>
+{% endblock %}
