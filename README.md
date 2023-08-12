@@ -1,5 +1,6 @@
-CASITA.PT
-=========
+# Casita
+
+Casita is an unfinished aggregator for real-estate. It scraped data from OLX and Custo Justo, using Scrapy, and this data was then shown in a Django app.
 
 SETUP
 -----
